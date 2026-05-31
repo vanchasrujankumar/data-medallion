@@ -97,12 +97,16 @@ class TestOrderModel:
         """Verify an Order can be created with multiple OrderItems."""
         items = [
             OrderItem(
-                product_id="prod_001", product_name="Wireless Mouse",
-                quantity=2, unit_price=29.99,
+                product_id="prod_001",
+                product_name="Wireless Mouse",
+                quantity=2,
+                unit_price=29.99,
             ),
             OrderItem(
-                product_id="prod_002", product_name="Mechanical Keyboard",
-                quantity=1, unit_price=89.99,
+                product_id="prod_002",
+                product_name="Mechanical Keyboard",
+                quantity=1,
+                unit_price=89.99,
             ),
         ]
         order = Order(
@@ -129,32 +133,40 @@ class TestOrderModel:
         """Verify OrderItem with negative quantity raises ValidationError (Field(gt=0))."""
         with pytest.raises(ValidationError):
             OrderItem(
-                product_id="prod_001", product_name="Wireless Mouse",
-                quantity=-1, unit_price=29.99,
+                product_id="prod_001",
+                product_name="Wireless Mouse",
+                quantity=-1,
+                unit_price=29.99,
             )
 
     def test_zero_quantity_raises_validation_error(self) -> None:
         """Verify zero quantity raises ValidationError (Field(gt=0))."""
         with pytest.raises(ValidationError):
             OrderItem(
-                product_id="prod_001", product_name="Wireless Mouse",
-                quantity=0, unit_price=29.99,
+                product_id="prod_001",
+                product_name="Wireless Mouse",
+                quantity=0,
+                unit_price=29.99,
             )
 
     def test_negative_unit_price_raises_validation_error(self) -> None:
         """Verify negative unit_price raises ValidationError (Field(gt=0))."""
         with pytest.raises(ValidationError):
             OrderItem(
-                product_id="prod_001", product_name="Wireless Mouse",
-                quantity=1, unit_price=-10.0,
+                product_id="prod_001",
+                product_name="Wireless Mouse",
+                quantity=1,
+                unit_price=-10.0,
             )
 
     def test_order_defaults_currency_and_status(self) -> None:
         """Verify Order sets default currency='USD' and status='pending'."""
         items = [
             OrderItem(
-                product_id="prod_001", product_name="Wireless Mouse",
-                quantity=1, unit_price=29.99,
+                product_id="prod_001",
+                product_name="Wireless Mouse",
+                quantity=1,
+                unit_price=29.99,
             ),
         ]
         order = Order(user_id="user_0001", items=items, total_amount=29.99)

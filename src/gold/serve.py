@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from datetime import date
-from typing import AsyncIterator
 
 import duckdb
 from fastapi import Depends, FastAPI, HTTPException, Query
@@ -79,7 +79,12 @@ async def get_dau(
         df = engine.daily_active_users(date_from, date_to)
         rows = [DAURow(**row) for row in df.to_dicts()]
         total = sum(r.active_users for r in rows)
-        return DAUResponse(data=rows, total_active_users=total, date_from=date_from, date_to=date_to)
+        return DAUResponse(
+            data=rows,
+            total_active_users=total,
+            date_from=date_from,
+            date_to=date_to,
+        )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
@@ -134,6 +139,11 @@ async def get_anomalies(
         df = engine.anomaly_detection(metric, lookback)
         rows = [AnomalyRow(**row) for row in df.to_dicts()]
         total = sum(1 for r in rows if r.is_anomaly)
-        return AnomalyResponse(anomalies=rows, metric=metric, lookback_days=lookback, total_anomalies=total)
+        return AnomalyResponse(
+            anomalies=rows,
+            metric=metric,
+            lookback_days=lookback,
+            total_anomalies=total,
+        )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))

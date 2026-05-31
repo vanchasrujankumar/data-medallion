@@ -1,12 +1,12 @@
-from typing import Any, Optional
 from datetime import datetime
 from enum import Enum
+from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
 
 
-class EventType(str, Enum):
+class EventType(str, Enum):  # noqa: UP042 — Python 3.10 compat for Airflow
     page_view = "page_view"
     click = "click"
     purchase = "purchase"
@@ -20,7 +20,7 @@ class Event(BaseModel):
     user_id: str
     session_id: str
     page: str
-    referrer: Optional[str] = None
+    referrer: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
@@ -39,5 +39,5 @@ class Order(BaseModel):
     total_amount: float = Field(gt=0)
     currency: str = "USD"
     status: str = "pending"
-    shipping_address: Optional[str] = None
+    shipping_address: str | None = None
     created_at: datetime = Field(default_factory=datetime.utcnow)

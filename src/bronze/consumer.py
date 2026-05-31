@@ -97,7 +97,12 @@ def _process_order(conn: duckdb.DuckDBPyConnection, data: dict[str, Any]) -> Non
             order.created_at.isoformat(),
         ],
     )
-    logger.info("Wrote order %s ($%.2f, %d items)", order.order_id, order.total_amount, len(order.items))
+    logger.info(
+        "Wrote order %s ($%.2f, %d items)",
+        order.order_id,
+        order.total_amount,
+        len(order.items),
+    )
 
 
 def main() -> None:
@@ -138,7 +143,11 @@ def main() -> None:
                         elif tp.topic == settings.topic_orders:
                             _process_order(conn, msg.value)
                     except Exception:
-                        logger.exception("Failed to process message from %s [offset %d]", tp.topic, msg.offset)
+                        logger.exception(
+                            "Failed to process message from %s [offset %d]",
+                            tp.topic,
+                            msg.offset,
+                        )
 
             consumer.commit()
     except Exception:

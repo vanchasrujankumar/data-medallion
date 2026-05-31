@@ -18,9 +18,7 @@ class TestDauEndpoint:
 
     def test_get_dau_returns_expected_schema(self, test_client: TestClient) -> None:
         """Verify GET /api/v1/kpis/dau returns DAUResponse with expected fields."""
-        response = test_client.get(
-            "/api/v1/kpis/dau?date_from=2024-01-01&date_to=2024-01-31"
-        )
+        response = test_client.get("/api/v1/kpis/dau?date_from=2024-01-01&date_to=2024-01-31")
         assert response.status_code == 200
         data = response.json()
         assert "data" in data
@@ -82,9 +80,7 @@ class TestUserSegmentsEndpoint:
 class TestConversionFunnelEndpoint:
     """Tests for the GET /api/v1/funnel/conversion endpoint."""
 
-    def test_get_conversion_funnel_returns_expected_schema(
-        self, test_client: TestClient
-    ) -> None:
+    def test_get_conversion_funnel_returns_expected_schema(self, test_client: TestClient) -> None:
         """Verify GET /api/v1/funnel/conversion returns FunnelResponse."""
         response = test_client.get(
             "/api/v1/funnel/conversion?date_from=2024-01-01&date_to=2024-01-31"
@@ -107,9 +103,7 @@ class TestAnomaliesEndpoint:
 
     def test_get_anomalies_returns_expected_schema(self, test_client: TestClient) -> None:
         """Verify GET /api/v1/anomalies returns AnomalyResponse with expected fields."""
-        response = test_client.get(
-            "/api/v1/anomalies?metric=dau&lookback=30"
-        )
+        response = test_client.get("/api/v1/anomalies?metric=dau&lookback=30")
         assert response.status_code == 200
         data = response.json()
         assert "anomalies" in data

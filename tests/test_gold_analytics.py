@@ -23,22 +23,18 @@ class TestAnalyticsEngineCache:
 
     def test_analytics_engine_cache_works(self, analytics_engine: AnalyticsEngine) -> None:
         """Verify calling same method twice returns cached result on second call."""
-        mock_data = pl.DataFrame({
-            "event_date": [date(2024, 1, 1)],
-            "active_users": [100],
-            "total_events": [500],
-            "avg_conversion_rate": [0.05],
-        })
+        mock_data = pl.DataFrame(
+            {
+                "event_date": [date(2024, 1, 1)],
+                "active_users": [100],
+                "total_events": [500],
+                "avg_conversion_rate": [0.05],
+            }
+        )
 
-        with patch.object(
-            analytics_engine, "_query", return_value=mock_data
-        ) as mock_query:
-            result1 = analytics_engine.daily_active_users(
-                date(2024, 1, 1), date(2024, 1, 31)
-            )
-            result2 = analytics_engine.daily_active_users(
-                date(2024, 1, 1), date(2024, 1, 31)
-            )
+        with patch.object(analytics_engine, "_query", return_value=mock_data) as mock_query:
+            result1 = analytics_engine.daily_active_users(date(2024, 1, 1), date(2024, 1, 31))
+            result2 = analytics_engine.daily_active_users(date(2024, 1, 1), date(2024, 1, 31))
 
             mock_query.assert_called_once()
             assert result1 is result2
@@ -47,22 +43,18 @@ class TestAnalyticsEngineCache:
         self, analytics_engine: AnalyticsEngine
     ) -> None:
         """Verify different arguments produce different cache keys and call _query twice."""
-        mock_data = pl.DataFrame({
-            "event_date": [date(2024, 1, 1)],
-            "active_users": [100],
-            "total_events": [500],
-            "avg_conversion_rate": [0.05],
-        })
+        mock_data = pl.DataFrame(
+            {
+                "event_date": [date(2024, 1, 1)],
+                "active_users": [100],
+                "total_events": [500],
+                "avg_conversion_rate": [0.05],
+            }
+        )
 
-        with patch.object(
-            analytics_engine, "_query", return_value=mock_data
-        ) as mock_query:
-            analytics_engine.daily_active_users(
-                date(2024, 1, 1), date(2024, 1, 7)
-            )
-            analytics_engine.daily_active_users(
-                date(2024, 1, 8), date(2024, 1, 14)
-            )
+        with patch.object(analytics_engine, "_query", return_value=mock_data) as mock_query:
+            analytics_engine.daily_active_users(date(2024, 1, 1), date(2024, 1, 7))
+            analytics_engine.daily_active_users(date(2024, 1, 8), date(2024, 1, 14))
 
             assert mock_query.call_count == 2
 
@@ -84,12 +76,9 @@ class TestDailyActiveUsers:
         )
 
         with patch.object(analytics_engine, "_query", return_value=mock_data):
-            result = analytics_engine.daily_active_users(
-                date(2024, 1, 1), date(2024, 1, 31)
-            )
+            result = analytics_engine.daily_active_users(date(2024, 1, 1), date(2024, 1, 31))
 
-            expected = {"event_date", "active_users", "total_events",
-                        "avg_conversion_rate"}
+            expected = {"event_date", "active_users", "total_events", "avg_conversion_rate"}
             assert set(result.columns) == expected
             assert len(result) == 2
 
@@ -106,9 +95,7 @@ class TestDailyActiveUsers:
         mock_data = pl.DataFrame(schema=schema)
 
         with patch.object(analytics_engine, "_query", return_value=mock_data):
-            result = analytics_engine.daily_active_users(
-                date(2024, 1, 1), date(2024, 1, 31)
-            )
+            result = analytics_engine.daily_active_users(date(2024, 1, 1), date(2024, 1, 31))
 
             assert len(result) == 0
 
@@ -116,9 +103,7 @@ class TestDailyActiveUsers:
 class TestTopProducts:
     """Tests for the top_products analytics method."""
 
-    def test_top_products_returns_expected_columns(
-        self, analytics_engine: AnalyticsEngine
-    ) -> None:
+    def test_top_products_returns_expected_columns(self, analytics_engine: AnalyticsEngine) -> None:
         """Verify top_products returns expected columns."""
         mock_data = pl.DataFrame(
             {
@@ -132,8 +117,7 @@ class TestTopProducts:
         with patch.object(analytics_engine, "_query", return_value=mock_data):
             result = analytics_engine.top_products(n=5)
 
-            expected = {"product_id", "product_name",
-                        "total_revenue", "order_count"}
+            expected = {"product_id", "product_name", "total_revenue", "order_count"}
             assert set(result.columns) == expected
 
     def test_top_products_respects_limit(self, analytics_engine: AnalyticsEngine) -> None:
@@ -174,8 +158,7 @@ class TestUserSegmentReport:
         with patch.object(analytics_engine, "_query", return_value=mock_data):
             result = analytics_engine.user_segment_report()
 
-            expected = {"segment_name", "user_count",
-                        "avg_spend", "avg_recency_days"}
+            expected = {"segment_name", "user_count", "avg_spend", "avg_recency_days"}
             assert set(result.columns) == expected
             assert len(result) == 5
 
@@ -196,9 +179,7 @@ class TestConversionFunnel:
         )
 
         with patch.object(analytics_engine, "_query", return_value=mock_data):
-            result = analytics_engine.conversion_funnel(
-                date(2024, 1, 1), date(2024, 1, 31)
-            )
+            result = analytics_engine.conversion_funnel(date(2024, 1, 1), date(2024, 1, 31))
 
             expected = {"step_name", "users", "count"}
             assert set(result.columns) == expected
@@ -217,13 +198,9 @@ class TestConversionFunnel:
         )
 
         with patch.object(analytics_engine, "_query", return_value=mock_data):
-            result = analytics_engine.conversion_funnel(
-                date(2024, 1, 1), date(2024, 1, 31)
-            )
+            result = analytics_engine.conversion_funnel(date(2024, 1, 1), date(2024, 1, 31))
 
-            assert result["step_name"].to_list() == [
-                "page_view", "click", "purchase"
-            ]
+            assert result["step_name"].to_list() == ["page_view", "click", "purchase"]
 
 
 class TestAnomalyDetection:
@@ -244,9 +221,7 @@ class TestAnomalyDetection:
         )
 
         with patch.object(analytics_engine, "_query", return_value=mock_data):
-            result = analytics_engine.anomaly_detection(
-                metric="dau", lookback_days=30
-            )
+            result = analytics_engine.anomaly_detection(metric="dau", lookback_days=30)
 
             expected = {"metric", "date", "value", "z_score", "is_anomaly"}
             assert set(result.columns) == expected

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import time
 from datetime import date
-from typing import Any
 
 import duckdb
 import polars as pl
@@ -93,7 +92,8 @@ class AnalyticsEngine:
                 END AS segment_name,
                 COUNT(*) AS user_count,
                 ROUND(AVG(COALESCE(total_spend, 0)), 2) AS avg_spend,
-                CAST(ROUND(AVG(COALESCE(days_since_last_activity, 999)), 0) AS INTEGER) AS avg_recency_days
+                CAST(ROUND(AVG(COALESCE(days_since_last_activity, 999)), 0)
+                    AS INTEGER) AS avg_recency_days
             FROM main_gold.customer_360
             GROUP BY segment_name
             ORDER BY segment_name

@@ -20,7 +20,7 @@ import random
 import signal
 import sys
 import time
-from typing import Any, NoReturn
+from typing import Any
 
 from kafka import KafkaProducer
 from kafka.errors import NoBrokersAvailable
@@ -113,7 +113,12 @@ def generate_event() -> Event:
         meta["payment_method"] = random.choice(["credit_card", "paypal", "apple_pay"])
         meta["coupon_applied"] = random.random() < 0.2
     elif event_type == EventType.error:
-        error_map = {400: "Bad Request", 404: "Not Found", 500: "Internal Server Error", 503: "Service Unavailable"}
+        error_map = {
+            400: "Bad Request",
+            404: "Not Found",
+            500: "Internal Server Error",
+            503: "Service Unavailable",
+        }
         code = random.choice(list(error_map.keys()))
         meta["error_code"] = code
         meta["error_message"] = error_map[code]
@@ -189,7 +194,12 @@ def _create_producer() -> KafkaProducer:
             return producer
         except NoBrokersAvailable:
             if attempt < max_retries:
-                logger.warning("Redpanda not available (attempt %d/%d) — retrying in %ds", attempt, max_retries, retry_delay)
+                logger.warning(
+                    "Redpanda not available (attempt %d/%d) — retrying in %ds",
+                    attempt,
+                    max_retries,
+                    retry_delay,
+                )
                 time.sleep(retry_delay)
             else:
                 raise
@@ -214,7 +224,10 @@ def main() -> None:
     try:
         producer = _create_producer()
     except NoBrokersAvailable:
-        logger.error("Cannot connect to Redpanda at %s. Is it running?", settings.redpanda_bootstrap_servers)
+        logger.error(
+            "Cannot connect to Redpanda at %s. Is it running?",
+            settings.redpanda_bootstrap_servers,
+        )
         sys.exit(1)
 
     # Track message counts for periodic logging
@@ -228,22 +241,36 @@ def main() -> None:
             if random.random() < 0.7:
                 event = generate_event()
                 data = event.model_dump(mode="json")
-                future = producer.send(settings.topic_events, value=data)
+                producer.send(settings.topic_events, value=data)
                 message_count += 1
-                logger.info("Produced event [%s] %s", event.event_type.value, event.event_id)
+                logger.info(
+                    "Produced event [%s] %s",
+                    event.event_type.value,
+                    event.event_id,
+                )
             else:
                 order = generate_order()
                 data = order.model_dump(mode="json")
-                future = producer.send(settings.topic_orders, value=data)
+                producer.send(settings.topic_orders, value=data)
                 message_count += 1
-                logger.info("Produced order %s ($%.2f, %d items)", order.order_id, order.total_amount, len(order.items))
+                logger.info(
+                    "Produced order %s ($%.2f, %d items)",
+                    order.order_id,
+                    order.total_amount,
+                    len(order.items),
+                )
 
             # Periodically flush and log throughput stats
             elapsed = time.time() - last_log_time
             if elapsed >= log_interval:
                 producer.flush()
                 rate = message_count / elapsed
-                logger.info("Producer stats: %d messages in %.0fs (%.1f msg/s)", message_count, elapsed, rate)
+                logger.info(
+                    "Producer stats: %d messages in %.0fs (%.1f msg/s)",
+                    message_count,
+                    elapsed,
+                    rate,
+                )
                 message_count = 0
                 last_log_time = time.time()
 
