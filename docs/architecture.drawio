@@ -1,0 +1,175 @@
+<mxfile host="Electron" modified="2026-05-30T23:00:00.000Z" version="26.0.0">
+  <diagram id="medallion-arch" name="Architecture">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="Data Medallion Architecture" style="text;strokeColor=none;fillColor=none;fontSize=24;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="340" y="20" width="500" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Sources Tier -->
+        <mxCell id="sources-tier" value="Data Sources" style="swimlane;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="80" width="1050" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="web-events" value="Web Events" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="sources-tier">
+          <mxGeometry x="120" y="35" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="order-system" value="Order System" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="sources-tier">
+          <mxGeometry x="360" y="35" width="120" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Streaming Tier -->
+        <mxCell id="streaming-tier" value="Streaming Layer" style="swimlane;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="200" width="1050" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="redpanda" value="Redpanda&#10;raw.events / raw.orders" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=0;fontSize=11;" vertex="1" parent="streaming-tier">
+          <mxGeometry x="240" y="30" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Bronze Tier -->
+        <mxCell id="bronze-tier" value="Bronze Layer - Raw Ingestion" style="swimlane;startSize=30;fillColor=#CD7F32;strokeColor=#8B5E3C;fontStyle=1;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="60" y="320" width="1050" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="bronze-consumer" value="Bronze Consumer&#10;(Python)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CD7F32;strokeColor=#8B5E3C;fontColor=#FFFFFF;" vertex="1" parent="bronze-tier">
+          <mxGeometry x="120" y="45" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bronze-db" value="bronze.events&#10;bronze.orders&#10;(Iceberg Tables)" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#CD7F32;strokeColor=#8B5E3C;fontColor=#FFFFFF;fontSize=11;" vertex="1" parent="bronze-tier">
+          <mxGeometry x="360" y="40" width="130" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Silver Tier -->
+        <mxCell id="silver-tier" value="Silver Layer - Cleaned &amp; Validated" style="swimlane;startSize=30;fillColor=#C0C0C0;strokeColor=#808080;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="460" width="1050" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="dbt-silver" value="dbt run&#10;(bronze_to_silver)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C0C0C0;strokeColor=#808080;" vertex="1" parent="silver-tier">
+          <mxGeometry x="120" y="45" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="dbt-test" value="dbt test&#10;(Data Quality)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="silver-tier">
+          <mxGeometry x="300" y="45" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="silver-db" value="silver.events_clean&#10;silver.orders_validated&#10;(Iceberg Tables)" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#C0C0C0;strokeColor=#808080;fontSize=11;" vertex="1" parent="silver-tier">
+          <mxGeometry x="480" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Gold Tier -->
+        <mxCell id="gold-tier" value="Gold Layer - Business Aggregations" style="swimlane;startSize=30;fillColor=#FFD700;strokeColor=#B8860B;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="600" width="1050" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="dbt-gold" value="dbt run&#10;(silver_to_gold)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD700;strokeColor=#B8860B;" vertex="1" parent="gold-tier">
+          <mxGeometry x="120" y="45" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="polars" value="Polars Analytics&#10;(RFM, Funnel, Anomaly)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD700;strokeColor=#B8860B;" vertex="1" parent="gold-tier">
+          <mxGeometry x="300" y="45" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="gold-db" value="gold.daily_kpis&#10;gold.customer_360&#10;(Iceberg Tables)" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#FFD700;strokeColor=#B8860B;fontSize=11;" vertex="1" parent="gold-tier">
+          <mxGeometry x="500" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Serving Tier -->
+        <mxCell id="serving-tier" value="Serving Layer" style="swimlane;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="740" width="1050" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="fastapi" value="FastAPI&#10;REST API :8000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="serving-tier">
+          <mxGeometry x="240" y="35" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Orchestration -->
+        <mxCell id="orchestration-tier" value="Orchestration - Airflow" style="swimlane;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="860" width="1050" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="airflow" value="medallion_pipeline DAG&#10;Bronze → Silver → Gold" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="orchestration-tier">
+          <mxGeometry x="240" y="25" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Storage -->
+        <mxCell id="storage-tier" value="Storage Layer" style="swimlane;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="960" width="1050" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="minio" value="MinIO (S3)&#10;Iceberg Warehouse" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="storage-tier">
+          <mxGeometry x="240" y="25" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: Sources → Redpanda -->
+        <mxCell id="e-src1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="web-events" target="redpanda" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-src2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="order-system" target="redpanda" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: Redpanda → Bronze Consumer -->
+        <mxCell id="e-rp-bc" value="stream" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" source="redpanda" target="bronze-consumer" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: Bronze Consumer → Bronze DB -->
+        <mxCell id="e-bc-bdb" value="write" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" source="bronze-consumer" target="bronze-db" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: Bronze DB → dbt Silver -->
+        <mxCell id="e-bdb-ds" value="read" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" source="bronze-db" target="dbt-silver" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: dbt Silver → dbt Test -->
+        <mxCell id="e-ds-dt" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dbt-silver" target="dbt-test" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: dbt Test → Silver DB -->
+        <mxCell id="e-dt-sdb" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dbt-test" target="silver-db" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: Silver DB → dbt Gold -->
+        <mxCell id="e-sdb-dg" value="read" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" source="silver-db" target="dbt-gold" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: dbt Gold → Gold DB -->
+        <mxCell id="e-dg-gdb" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dbt-gold" target="gold-db" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: Gold DB → Polars -->
+        <mxCell id="e-gdb-pl" value="read" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" source="gold-db" target="polars" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: Polars → FastAPI -->
+        <mxCell id="e-pl-api" value="serve" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;" edge="1" source="polars" target="fastapi" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Dashed arrows from Airflow to all processing steps -->
+        <mxCell id="e-af-bc" value="orchestrates" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;dashed=1;strokeColor=#9673a6;" edge="1" source="airflow" target="bronze-consumer" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-af-ds" value="triggers" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;dashed=1;strokeColor=#9673a6;" edge="1" source="airflow" target="dbt-silver" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-af-dg" value="triggers" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;dashed=1;strokeColor=#9673a6;" edge="1" source="airflow" target="dbt-gold" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-af-pl" value="triggers" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;dashed=1;strokeColor=#9673a6;" edge="1" source="airflow" target="polars" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Dashed arrows from storage to all databases -->
+        <mxCell id="e-minio-bdb" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;dashed=1;strokeColor=#666666;" edge="1" source="minio" target="bronze-db" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-minio-sdb" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;dashed=1;strokeColor=#666666;" edge="1" source="minio" target="silver-db" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-minio-gdb" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;dashed=1;strokeColor=#666666;" edge="1" source="minio" target="gold-db" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

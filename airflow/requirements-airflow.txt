@@ -1,0 +1,5 @@
+apache-airflow==2.9.1
+dbt-duckdb==1.8.0
+polars==1.0.0
+kafka-python==2.0.2
+minio==7.2.0

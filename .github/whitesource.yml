@@ -1,0 +1,58 @@
+version: 0.1
+pipeline:
+  checkRunStatus:
+    - name: Mend SCA Scan
+      context:
+        - SCA Scan
+    - name: Mend SAST Scan
+      context:
+        - SAST Scan
+    - name: Mend Container Scan
+      context:
+        - Container Scan
+  autoMerge:
+    - match:
+        checkRunStatus:
+          - name: Mend SCA Scan
+            status: success
+          - name: CI
+            status: success
+      mergeMethod: squash
+      deleteBranchAfterMerge: true
+      platformAutoMerge: true
+  autoComplete:
+    - match:
+        author:
+          type: bot
+        checkRunStatus:
+          - name: Mend SCA Scan
+            status: success
+          - name: CI
+            status: success
+
+github:
+  repository:
+    autoMerge: true
+    mergeMethod: squash
+    deleteBranchAfterMerge: true
+
+sca:
+  enabled: true
+  resolveDependencies: true
+  python:
+    resolveDependencies: true
+    packageManager: pip
+  docker:
+    enabled: true
+    images:
+      - python:3.12-slim
+      - redpandadata/redpanda:v24.1.2
+      - minio/minio:latest
+      - apache/airflow:2.9.1
+      - postgres:15
+
+sast:
+  enabled: false
+
+container:
+  enabled: true

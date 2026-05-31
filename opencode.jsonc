@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "ollama/qwen3-coder-next",
+  "instructions": ["CLAUDE.md", ".github/AGENTS.md"],
+  "agent": {
+    "build": {
+      "prompt": "You are a data engineering specialist. Apply karpathy-guidelines to all coding work."
+    },
+    "plan": {
+      "prompt": "Design the data pipeline architecture. Consider: data sources, transformations, orchestration, serving, testing strategy."
+    }
+  },
+  "permission": {
+    "bash": "allow",
+    "read": "allow",
+    "edit": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "write": "allow"
+  }
+}

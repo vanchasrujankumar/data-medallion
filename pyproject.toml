@@ -1,0 +1,64 @@
+[project]
+name = "data-medallion"
+version = "0.1.0"
+description = "Medallion architecture data pipeline with Redpanda, MinIO, DuckDB, dbt, Polars, Airflow, and FastAPI"
+requires-python = ">=3.12"
+authors = [
+    { name = "Data Engineering Team" },
+]
+dependencies = [
+    "dagster>=1.7.0",
+    "dbt-duckdb>=1.8.0",
+    "duckdb>=1.0.0",
+    "polars>=1.0.0",
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    "kafka-python>=2.0.2",
+    "minio>=7.2.0",
+    "pydantic>=2.6.0",
+    "pydantic-settings>=2.2.0",
+    "pyiceberg>=0.6.0",
+    "pyarrow>=15.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.3.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["I", "E", "W", "F", "N", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_any_generics = false
+explicit_package_bases = true
+namespace_packages = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+filterwarnings = ["ignore::DeprecationWarning"]

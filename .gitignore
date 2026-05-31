@@ -150,7 +150,8 @@ activemq-data/
 # Environments
 .env
 .envrc
-.venv
+.venv/
+venv/
 env/
 venv/
 ENV/
@@ -216,3 +217,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project data (local DuckDB files, cached data)
+data/
+*.duckdb
+*.duckdb.wal
+.tmp/
+src/silver/.user.yml

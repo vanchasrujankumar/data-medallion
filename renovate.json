@@ -1,0 +1,85 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":separateMajorMinor",
+    ":combinePatchMinorUpdates",
+    ":automergeDigest",
+    ":automergePatch",
+    ":automergeTypes",
+    ":enableVulnerabilityAlerts",
+    ":labels(dependencies)",
+    ":rebaseStalePrs"
+  ],
+  "packageRules": [
+    {
+      "description": "Auto-merge minor and patch updates for production dependencies",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchDepTypes": ["dependencies"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Auto-merge all dev dependency updates",
+      "matchDepTypes": ["dev-dependencies"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Group Docker dependency updates weekly",
+      "matchDatasources": ["docker"],
+      "schedule": ["before 9am on Monday"],
+      "groupName": "Docker dependencies",
+      "automerge": false
+    },
+    {
+      "description": "Major updates need manual review",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["major", "dependencies"]
+    },
+    {
+      "description": "Security patches get highest priority",
+      "matchUpdateTypes": ["pin", "digest", "patch"],
+      "matchCategories": ["security"],
+      "automerge": true,
+      "automergeType": "pr",
+      "priority": 1,
+      "labels": ["security", "dependencies"]
+    },
+    {
+      "description": "Airflow updates — pin to minor versions for stability",
+      "matchPackageNames": ["apache-airflow"],
+      "matchUpdateTypes": ["minor"],
+      "enabled": true,
+      "automerge": false,
+      "labels": ["airflow", "dependencies"]
+    },
+    {
+      "description": "Python base image updates",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["python"],
+      "labels": ["python", "base-image"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "CVE"],
+    "automerge": true,
+    "automergeType": "pr",
+    "platformAutomerge": true
+  },
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 3,
+  "schedule": ["before 9am on Monday", "before 9am on Thursday"],
+  "timezone": "America/Chicago",
+  "assignees": [],
+  "reviewers": [],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Dependency Dashboard (Renovate)",
+  "rebaseWhen": "auto",
+  "branchConcurrentLimit": 10,
+  "transitiveRemediation": true
+}
