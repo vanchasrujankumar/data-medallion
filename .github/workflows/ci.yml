@@ -85,14 +85,11 @@ jobs:
         run: uv run pytest tests/ -v --tb=short --cov=src --cov-report=term-missing
         env:
           PYTHONPATH: src
-      - name: Create test data directory
-        run: mkdir -p data
       - name: Test dbt compilation
         run: |
+          mkdir -p "${{ github.workspace }}/data"
           cd src/silver
           uv run dbt compile --profiles-dir . --project-dir .
-        env:
-          DUCKDB_PATH: ${{ env.DUCKDB_PATH }}
 
   docker:
     name: Docker Build
