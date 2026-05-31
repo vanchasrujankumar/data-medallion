@@ -15,7 +15,8 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 WORKDIR /app
 
 COPY pyproject.toml requirements.txt ./
-RUN uv pip install --no-cache -r requirements.txt[dev]
+RUN uv pip install --no-cache -r requirements.txt && \
+    uv pip install --no-cache -e ".[dev]"
 
 COPY src/ src/
 COPY tests/ tests/
