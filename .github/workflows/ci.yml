@@ -29,6 +29,8 @@ jobs:
           key: uv-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Add uv to PATH
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Install dependencies
         run: uv sync --dev
       - name: Run ruff linter
@@ -74,6 +76,8 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Add uv to PATH
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Install dependencies
         run: uv sync --dev
       - name: Run tests
