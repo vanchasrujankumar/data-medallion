@@ -301,7 +301,7 @@ Full API docs at `http://localhost:8000/docs` (Swagger UI).
 
 - **Renovate** — Automated dependency updates with auto-merge for minor/patch and security fixes ([config](renovate.json))
 - **Mend (Whitesource)** — SCA scanning for CVEs in Python, Docker, and infrastructure dependencies ([config](.github/whitesource.yml))
-- **Snyk** — Continuous vulnerability monitoring ([badge](#))
+- **Snyk** — Continuous vulnerability monitoring ([badge](https://snyk.io/test/github/vanchasrujankumar/data-medallion-))
 
 ### Secrets & Credentials
 
