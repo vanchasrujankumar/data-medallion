@@ -32,7 +32,7 @@ jobs:
       - name: Add uv to PATH
         run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Install dependencies
-        run: uv sync --dev
+        run: uv sync --all-extras
       - name: Run ruff linter
         run: uv run ruff check --output-format=github .
       - name: Run ruff formatter check
@@ -79,7 +79,7 @@ jobs:
       - name: Add uv to PATH
         run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Install dependencies
-        run: uv sync --dev
+        run: uv sync --all-extras
       - name: Run tests
         run: uv run pytest tests/ -v --tb=short --cov=src --cov-report=term-missing
       - name: Create test data directory
