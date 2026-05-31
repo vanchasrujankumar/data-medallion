@@ -47,7 +47,6 @@ with DAG(
     tags=["medallion", "elt", "production"],
     sla_miss_callback=None,
 ) as dag:
-
     start = DummyOperator(task_id="start")
 
     # -- Bronze Layer ------------------------------------------------------------
