@@ -55,7 +55,9 @@ with DAG(
         task_id="bronze.check_source_freshness",
         bash_command="""
         echo "Checking Bronze source freshness..."
-        dbt source freshness --profiles-dir /opt/airflow/src/silver --project-dir /opt/airflow/src/silver
+        dbt source freshness \
+            --profiles-dir /opt/airflow/src/silver \
+            --project-dir /opt/airflow/src/silver
         """,
     )
 
@@ -96,7 +98,9 @@ with DAG(
 
     gold_analytics = PythonOperator(
         task_id="gold.run_analytics",
-        python_callable=lambda: print("Gold analytics complete -- Polars aggregations would run here"),
+        python_callable=lambda: print(
+            "Gold analytics complete -- Polars aggregations would run here"
+        ),
     )
 
     end = DummyOperator(task_id="end")
