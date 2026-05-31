@@ -1,9 +1,9 @@
 # Data Medallion
 
-[![CI](https://github.com/vanchasrujankumar/data-medallion-/actions/workflows/ci.yml/badge.svg)](https://github.com/vanchasrujankumar/data-medallion-/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/vanchasrujankumar/data-medallion-/branch/main/graph/badge.svg)](https://codecov.io/gh/vanchasrujankumar/data-medallion-)
-[![Dependencies](https://img.shields.io/badge/dependencies-Renovate-blue)](https://github.com/vanchasrujankumar/data-medallion-/blob/main/renovate.json)
-[![Snyk](https://snyk.io/test/github/vanchasrujankumar/data-medallion-/badge.svg)](https://snyk.io/test/github/vanchasrujankumar/data-medallion-)
+[![CI](https://github.com/vanchasrujankumar/data-medallion/actions/workflows/ci.yml/badge.svg)](https://github.com/vanchasrujankumar/data-medallion/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/vanchasrujankumar/data-medallion/branch/main/graph/badge.svg)](https://codecov.io/gh/vanchasrujankumar/data-medallion)
+[![Dependencies](https://img.shields.io/badge/dependencies-Renovate-blue)](https://github.com/vanchasrujankumar/data-medallion/blob/main/renovate.json)
+[![Snyk](https://snyk.io/test/github/vanchasrujankumar/data-medallion/badge.svg)](https://snyk.io/test/github/vanchasrujankumar/data-medallion)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue?logo=python)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Deploy](https://img.shields.io/badge/deploy-manual-blue?logo=githubactions)](.github/workflows/deploy.yml)
@@ -205,8 +205,8 @@ data-medallion/
 ### 1. Clone & Configure
 
 ```bash
-git clone git@github.com:vanchasrujankumar/data-medallion-.git
-cd data-medallion-
+git clone git@github.com:vanchasrujankumar/data-medallion.git
+cd data-medallion
 cp .env.example .env
 # Edit .env if needed (defaults work for local dev)
 ```
@@ -301,7 +301,7 @@ Full API docs at `http://localhost:8000/docs` (Swagger UI).
 
 - **Renovate** — Automated dependency updates with auto-merge for minor/patch and security fixes ([config](renovate.json))
 - **Mend (Whitesource)** — SCA scanning for CVEs in Python, Docker, and infrastructure dependencies ([config](.github/whitesource.yml))
-- **Snyk** — Continuous vulnerability monitoring ([badge](https://snyk.io/test/github/vanchasrujankumar/data-medallion-))
+- **Snyk** — Continuous vulnerability monitoring ([badge](https://snyk.io/test/github/vanchasrujankumar/data-medallion))
 
 ### Secrets & Credentials
 
