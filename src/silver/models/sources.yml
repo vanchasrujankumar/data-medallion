@@ -5,6 +5,10 @@ sources:
     schema: bronze
     tables:
       - name: events
-        description: Raw events from Redpanda
+        description: Raw web events ingested from Redpanda topic raw.events
+        freshness:
+          warn_after: { count: 1, period: hour }
       - name: orders
-        description: Raw orders from Redpanda
+        description: Raw order data ingested from Redpanda topic raw.orders
+        freshness:
+          warn_after: { count: 1, period: hour }
