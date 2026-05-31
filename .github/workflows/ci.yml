@@ -83,6 +83,8 @@ jobs:
         run: uv sync --all-extras
       - name: Run tests
         run: uv run pytest tests/ -v --tb=short --cov=src --cov-report=term-missing
+        env:
+          PYTHONPATH: src
       - name: Create test data directory
         run: mkdir -p data
       - name: Test dbt compilation
