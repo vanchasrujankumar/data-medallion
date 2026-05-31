@@ -90,6 +90,8 @@ jobs:
           mkdir -p "${{ github.workspace }}/data"
           cd src/silver
           uv run dbt compile --profiles-dir . --project-dir .
+        env:
+          DUCKDB_PATH: ${{ github.workspace }}/data/test.duckdb
 
   docker:
     name: Docker Build
